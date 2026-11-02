@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP Information</title>
+    <style>
+        /* Basic styling to make it look clean */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .card {
+            background: #ffffff;
+            padding: 2rem 3rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-top: 0;
+            font-size: 1.5rem;
+        }
+        .ip-display {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2980b9;
+            margin: 1rem 0;
+            word-break: break-all;
+            min-height: 2.5rem;
+        }
+        .loading {
+            color: #95a5a6;
+            font-size: 1rem;
+            font-weight: normal;
+        }
+        .error {
+            color: #e74c3c;
+            font-size: 1rem;
+            font-weight: normal;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h1>Your Public IP Address</h1>
+        <p>The IP address connecting to this page is:</p>
+        <!-- This is where the JavaScript will inject the IP -->
+        <div id="ip-result" class="ip-display loading">Fetching IP...</div>
+    </div>
+
+    <script>
+        // JavaScript to fetch and display the IP
+        const ipElement = document.getElementById('ip-result');
+
+        // We use the ipify API, which is free and returns the public IP in JSON format
+        fetch('https://api.ipify.org?format=json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Update the UI with the fetched IP
+                ipElement.innerText = data.ip;
+                ipElement.classList.remove('loading');
+            })
+            .catch(error => {
+                // Handle any errors (e.g., if the user is offline)
+                console.error('Error fetching IP:', error);
+                ipElement.innerText = 'Could not retrieve IP';
+                ipElement.classList.remove('loading');
+                ipElement.classList.add('error');
+            });
+    </script>
+
+</body>
+</html>
